@@ -26,7 +26,8 @@ namespace MinesweeperTests
         public void TestBasic()
         {
             var grid = new Grid(pic1);
-            Assert.IsNotNull(grid);
+            Assert.AreEqual(4, grid.y);
+            Assert.AreEqual(4, grid.x);
             Assert.AreEqual(pic1, grid.ToString());
         }
     }
