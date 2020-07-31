@@ -67,6 +67,15 @@ namespace Minesweeper
                  select 0).ToArray()).ToArray();
         }
 
+        public static int[][] Add(int[][] acc, char[][] grid)
+        {
+            return acc.Zip(grid,
+                (ar,gr) =>
+                    ar.Zip(gr,
+                        (a,g) => g == MINE ? a + 1 : a)
+                .ToArray()).ToArray();
+        }
+
         public override string ToString()
         {
             return (from r in grid
