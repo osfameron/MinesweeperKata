@@ -37,6 +37,23 @@ namespace Minesweeper
             return new Grid(rows);
         }
 
+        public string Output()
+        {
+            var pg = ProximityGrid();
+            return ReinsertMines(pg);
+        }
+
+        private string ReinsertMines(int[][] pg)
+        {
+            // TODO: refactor, extracting ZipOverGrid along with Add, below.
+            return pg.Zip(grid,
+                (pr,gr) =>
+                    pr.Zip(gr,
+                        (p,g) => g == MINE ? MINE.ToString() : p.ToString())
+                .Aggregate((a,b) => $"{a}{b}"))
+                .Aggregate((a,b) => $"{a}\n{b}");
+        }
+
         public int[][] ProximityGrid()
         {
             char[][][] center = {Left(), grid, Right()};

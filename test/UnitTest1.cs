@@ -91,5 +91,13 @@ namespace MinesweeperTests
             Assert.AreEqual(3, i[2][1]);
             Assert.AreEqual(2, i[2][2]);
         }
+
+        [Test]
+        public void TestOutput()
+        {
+            var g = Grid.FromPicture("*.*\n.*.\n*.*");
+            var expected = "*3*\n3*3\n*3*";
+            Assert.AreEqual(expected, g.Output());
+        }
     }
 }
