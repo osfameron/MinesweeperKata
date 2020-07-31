@@ -39,13 +39,24 @@ namespace Minesweeper
 
         public int[][] ProximityGrid()
         {
-            char[][][] layers = {Left(), Right(), Up(), Down()};
+            char[][][] center = {Left(), grid, Right()};
+            var up = (from g in center select Up(g)).ToArray();
+            var down = (from g in center select Down(g)).ToArray();
+            var layers = up.Concat(center).Concat(down);
+
             return layers.Aggregate(
                         Zeros(),
                         Add);
         }
 
-        public char[][] Left()
+        private char[] EmptyRow() {
+            return Enumerable.Repeat(EMPTY, x).ToArray();
+        }
+
+        public char[][] Left() {
+            return Left(grid);
+        }
+        public char[][] Left(char[][] grid)
         {
             return
                 (from r in grid
@@ -58,6 +69,10 @@ namespace Minesweeper
 
         public char[][] Right()
         {
+            return Right(grid);
+        }
+        public char[][] Right(char[][] grid)
+        {
             return
                 (from r in grid
                  select r
@@ -66,17 +81,23 @@ namespace Minesweeper
                     .ToArray())
                  .ToArray();
         }
-        
-        private char[] EmptyRow() {
-            return Enumerable.Repeat(EMPTY, x).ToArray();
-        }
 
         public char[][] Up()
+        {
+            return Up(grid);
+        }
+
+        public char[][] Up(char[][] grid)
         {
             return
                 grid.Skip(1).Append(EmptyRow()).ToArray();
         }
         public char[][] Down()
+        {
+            return Down(grid);
+        }
+
+        public char[][] Down(char[][] grid)
         {
             return
                 grid.SkipLast(1).Prepend(EmptyRow()).ToArray();
