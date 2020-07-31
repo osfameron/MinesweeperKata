@@ -73,5 +73,23 @@ namespace MinesweeperTests
             Assert.AreEqual(0, n[1][0]);
             Assert.AreEqual(0, n[1][1]);
         }
+
+        [Test]
+        public void TestProximityGrid()
+        {
+            var g = Grid.FromPicture("*.*\n.*.\n*.*");
+            var i = g.ProximityGrid();
+            Assert.AreEqual(0, i[0][0]);
+            Assert.AreEqual(3, i[0][1]);
+            Assert.AreEqual(0, i[0][2]);
+
+            Assert.AreEqual(3, i[1][0]);
+            Assert.AreEqual(0, i[1][1]);
+            Assert.AreEqual(3, i[1][2]);
+
+            Assert.AreEqual(0, i[2][0]);
+            Assert.AreEqual(3, i[2][1]);
+            Assert.AreEqual(0, i[2][2]);
+        }
     }
 }

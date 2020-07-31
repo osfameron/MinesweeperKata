@@ -37,6 +37,14 @@ namespace Minesweeper
             return new Grid(rows);
         }
 
+        public int[][] ProximityGrid()
+        {
+            char[][][] layers = {Left(), Right(), Up(), Down()};
+            return layers.Aggregate(
+                        Zeros(),
+                        Add);
+        }
+
         public char[][] Left()
         {
             return
@@ -47,6 +55,7 @@ namespace Minesweeper
                     .ToArray())
                  .ToArray();
         }
+
         public char[][] Right()
         {
             return
@@ -56,6 +65,21 @@ namespace Minesweeper
                     .Prepend(EMPTY)
                     .ToArray())
                  .ToArray();
+        }
+        
+        private char[] EmptyRow() {
+            return Enumerable.Repeat(EMPTY, x).ToArray();
+        }
+
+        public char[][] Up()
+        {
+            return
+                grid.Skip(1).Append(EmptyRow()).ToArray();
+        }
+        public char[][] Down()
+        {
+            return
+                grid.SkipLast(1).Prepend(EmptyRow()).ToArray();
         }
 
         public int[][] Zeros()
