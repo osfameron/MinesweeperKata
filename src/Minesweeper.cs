@@ -5,6 +5,7 @@ namespace Minesweeper
 {
     public class Grid
     {
+        public const char EMPTY = '.';
         private char[][] grid;
         public readonly int y;
         public readonly int x;
@@ -36,7 +37,23 @@ namespace Minesweeper
 
         public char[][] Left()
         {
-            return grid; // stub
+            return
+                (from r in grid
+                 select r
+                    .Skip(1)
+                    .Append(EMPTY)
+                    .ToArray())
+                 .ToArray();
+        }
+        public char[][] Right()
+        {
+            return
+                (from r in grid
+                 select r
+                    .SkipLast(1)
+                    .Prepend(EMPTY)
+                    .ToArray())
+                 .ToArray();
         }
 
         public override string ToString()
