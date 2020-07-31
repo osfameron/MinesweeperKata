@@ -6,6 +6,8 @@ namespace Minesweeper
     public class Grid
     {
         public const char EMPTY = '.';
+        public const char MINE = '*';
+
         private char[][] grid;
         public readonly int y;
         public readonly int x;
