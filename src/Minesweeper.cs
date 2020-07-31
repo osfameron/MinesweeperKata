@@ -1,5 +1,3 @@
-#define CONTRACTS_FULL
-
 using System;
 using System.Linq;
 
