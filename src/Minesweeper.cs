@@ -56,6 +56,15 @@ namespace Minesweeper
                  .ToArray();
         }
 
+        public int[][] Zeros()
+        {
+            return
+                (from row in grid
+                select
+                 (from c in row
+                 select 0).ToArray()).ToArray();
+        }
+
         public override string ToString()
         {
             return (from r in grid

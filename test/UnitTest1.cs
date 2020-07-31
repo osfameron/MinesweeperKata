@@ -49,5 +49,16 @@ namespace MinesweeperTests
             var gRight = new Grid(right);
             Assert.AreEqual(pic1, gRight.ToString());
         }
+
+        [Test]
+        public void TestZeros()
+        {
+            var g = Grid.FromPicture("..\n..");
+            var z = g.Zeros();
+            Assert.AreEqual(0, z[0][0]);
+            Assert.AreEqual(0, z[0][1]);
+            Assert.AreEqual(0, z[1][0]);
+            Assert.AreEqual(0, z[1][1]);
+        }
     }
 }
