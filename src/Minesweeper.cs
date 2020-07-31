@@ -8,25 +8,30 @@ namespace Minesweeper
         private char[][] grid;
         public readonly int y;
         public readonly int x;
-        public Grid(string picture)
+
+        public Grid(char[][] rows)
         {
-            #region unpack and preconditions
-            // TODO: find standard idiom for this: Contract.Requires crashes `dotnet`
-            if (picture.Length == 0) {
-                throw new ArgumentException("Must pass in non-zero-length String");
+            grid = rows;
+            x = rows[0].Length;
+            y = rows.Length;
+
+            #region preconditions
+            if (x == 0)
+            {
+                throw new ArgumentException("Can't initialize an empty grid");
             }
-            string[] lines = picture.Split("\n");
-            var rows = from l in lines
-                       select l.ToCharArray();
-            x = lines[0].Length;
-            y = lines.Length;
             if (rows.Any(r => r.Length != x))
             {
                 throw new ArgumentException("Row size mismatch");
             }
             #endregion
-
-            grid = rows.ToArray();
+        }
+        public static Grid FromPicture(string picture)
+        {
+            var rows = (from l in picture.Split("\n")
+                        select l.ToCharArray())
+                       .ToArray();
+            return new Grid(rows);
         }
 
         public char[][] Left()

@@ -18,14 +18,14 @@ namespace MinesweeperTests
         [Test]
         public void TestInvalidArguments()
         {
-            Assert.Throws<ArgumentException>(() => new Grid(""));
-            Assert.Throws<ArgumentException>(() => new Grid("short\nverylongline"));
+            Assert.Throws<ArgumentException>(() => Grid.FromPicture(""));
+            Assert.Throws<ArgumentException>(() => Grid.FromPicture("short\nverylongline"));
         }
 
         [Test]
         public void TestBasic()
         {
-            var grid = new Grid(pic1);
+            var grid = Grid.FromPicture(pic1);
             Assert.AreEqual(4, grid.y);
             Assert.AreEqual(4, grid.x);
             Assert.AreEqual(pic1, grid.ToString());
