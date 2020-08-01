@@ -15,13 +15,17 @@ namespace Minesweeper
         public Grid(char[][] rows)
         {
             grid = rows;
-            x = rows[0].Length;
             y = rows.Length;
 
             #region preconditions
-            if (x == 0)
+            if (y == 0)
             {
                 throw new ArgumentException("Can't initialize an empty grid");
+            }
+            x = rows[0].Length;
+            if (x == 0)
+            {
+                throw new ArgumentException("Can't initialize a grid with empty rows");
             }
             if (rows.Any(r => r.Length != x))
             {
@@ -133,6 +137,5 @@ namespace Minesweeper
                   (from c in row
                    select 0).ToArray()).ToArray();
         }
-
     }
 }

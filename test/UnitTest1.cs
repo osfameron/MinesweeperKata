@@ -25,6 +25,20 @@ namespace MinesweeperTests
         {
             Assert.Throws<ArgumentException>(() => Grid.FromPicture(""));
             Assert.Throws<ArgumentException>(() => Grid.FromPicture("short\nverylongline"));
+            Assert.Throws<ArgumentException>(EmptyGrid);
+            Assert.Throws<ArgumentException>(EmptyRow);
+        }
+
+        public void EmptyGrid()
+        {
+            char[][] x = {};
+            var g = new Grid(x);
+        }
+        public void EmptyRow()
+        {
+            char[] row = {};
+            char[][] x = {row};
+            var g = new Grid(x);
         }
 
         [Test]
