@@ -50,15 +50,28 @@ namespace Minesweeper
                    .Aggregate((a, b) => $"{a}\n{b}");
         }
 
+        public TOut[][] ZipOverGrid<TOut, TIn1, TIn2>(
+                                            TIn1[][] acc,
+                                            TIn2[][] grid,
+                                            Func<TIn1, TIn2, TOut> f)
+        {
+            return acc.Zip(grid,
+                (ar, gr) =>
+                    ar.Zip(gr, f)
+                .ToArray()).ToArray();
+        }
+
+        private static int Add(int a, char g)
+        {
+            return g == MINE ? a + 1 : a;
+        }
+
         private string ReinsertMines(int[][] pg)
         {
-            // TODO: refactor, extracting ZipOverGrid along with Add, below.
-            return pg.Zip(grid,
-                (pr, gr) =>
-                    pr.Zip(gr,
-                        (p, g) => g == MINE ? MINE.ToString() : p.ToString())
-                .Aggregate((a, b) => $"{a}{b}"))
-                .Aggregate((a, b) => $"{a}\n{b}");
+            var final = ZipOverGrid(pg,
+                                    grid,
+                                    (p, g) => g == MINE ? MINE : p.ToString()[0]);
+            return new Grid(final).ToString();
         }
 
         private int[][] ProximityGrid()
@@ -70,7 +83,7 @@ namespace Minesweeper
 
             return layers.Aggregate(
                         Zeros(),
-                        Add);
+                        (acc, grid) => ZipOverGrid(acc, grid, Add));
         }
 
         private char[] EmptyRow()
@@ -105,7 +118,7 @@ namespace Minesweeper
             return
                 grid.Skip(1).Append(EmptyRow()).ToArray();
         }
-        private char[][] Down(char [][] grid)
+        private char[][] Down(char[][] grid)
         {
             return
                 grid.SkipLast(1).Prepend(EmptyRow()).ToArray();
@@ -120,13 +133,5 @@ namespace Minesweeper
                    select 0).ToArray()).ToArray();
         }
 
-        private static int[][] Add(int[][] acc, char[][] grid)
-        {
-            return acc.Zip(grid,
-                (ar, gr) =>
-                    ar.Zip(gr,
-                        (a, g) => g == MINE ? a + 1 : a)
-                .ToArray()).ToArray();
-        }
     }
 }
