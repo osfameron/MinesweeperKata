@@ -39,8 +39,9 @@ namespace Minesweeper
 
         public string Output()
         {
-            var pg = ProximityGrid();
-            return ReinsertMines(pg);
+            return
+                ReinsertMines(ProximityGrid())
+                .ToString();
         }
 
         public override string ToString()
@@ -66,12 +67,12 @@ namespace Minesweeper
             return g == MINE ? a + 1 : a;
         }
 
-        private string ReinsertMines(int[][] pg)
+        private Grid ReinsertMines(int[][] pg)
         {
             var final = ZipOverGrid(pg,
                                     grid,
                                     (p, g) => g == MINE ? MINE : p.ToString()[0]);
-            return new Grid(final).ToString();
+            return new Grid(final);
         }
 
         private int[][] ProximityGrid()
