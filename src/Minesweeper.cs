@@ -7,10 +7,10 @@ namespace Minesweeper
     {
         public const char EMPTY = '.';
         public const char MINE = '*';
-
-        private char[][] grid;
         public readonly int y;
         public readonly int x;
+
+        private char[][] grid;
 
         public Grid(char[][] rows)
         {
@@ -43,6 +43,13 @@ namespace Minesweeper
             return ReinsertMines(pg);
         }
 
+        public override string ToString()
+        {
+            return (from r in grid
+                    select new string(r))
+                   .Aggregate((a, b) => $"{a}\n{b}");
+        }
+
         private string ReinsertMines(int[][] pg)
         {
             // TODO: refactor, extracting ZipOverGrid along with Add, below.
@@ -54,7 +61,7 @@ namespace Minesweeper
                 .Aggregate((a, b) => $"{a}\n{b}");
         }
 
-        public int[][] ProximityGrid()
+        private int[][] ProximityGrid()
         {
             char[][][] center = { Left(), grid, Right() };
             var up = (from g in center select Up(g)).ToArray();
@@ -71,11 +78,7 @@ namespace Minesweeper
             return Enumerable.Repeat(EMPTY, x).ToArray();
         }
 
-        public char[][] Left()
-        {
-            return Left(grid);
-        }
-        public char[][] Left(char[][] grid)
+        private char[][] Left()
         {
             return
                 (from r in grid
@@ -86,11 +89,7 @@ namespace Minesweeper
                  .ToArray();
         }
 
-        public char[][] Right()
-        {
-            return Right(grid);
-        }
-        public char[][] Right(char[][] grid)
+        private char[][] Right()
         {
             return
                 (from r in grid
@@ -101,27 +100,18 @@ namespace Minesweeper
                  .ToArray();
         }
 
-        public char[][] Up()
-        {
-            return Up(grid);
-        }
-        public char[][] Up(char[][] grid)
+        private char[][] Up(char[][] grid)
         {
             return
                 grid.Skip(1).Append(EmptyRow()).ToArray();
         }
-        public char[][] Down()
-        {
-            return Down(grid);
-        }
-
-        public char[][] Down(char[][] grid)
+        private char[][] Down(char [][] grid)
         {
             return
                 grid.SkipLast(1).Prepend(EmptyRow()).ToArray();
         }
 
-        public int[][] Zeros()
+        private int[][] Zeros()
         {
             return
                 (from row in grid
@@ -130,20 +120,13 @@ namespace Minesweeper
                    select 0).ToArray()).ToArray();
         }
 
-        public static int[][] Add(int[][] acc, char[][] grid)
+        private static int[][] Add(int[][] acc, char[][] grid)
         {
             return acc.Zip(grid,
                 (ar, gr) =>
                     ar.Zip(gr,
                         (a, g) => g == MINE ? a + 1 : a)
                 .ToArray()).ToArray();
-        }
-
-        public override string ToString()
-        {
-            return (from r in grid
-                    select new string(r))
-                   .Aggregate((a, b) => $"{a}\n{b}");
         }
     }
 }
