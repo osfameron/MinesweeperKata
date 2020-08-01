@@ -47,16 +47,16 @@ namespace Minesweeper
         {
             // TODO: refactor, extracting ZipOverGrid along with Add, below.
             return pg.Zip(grid,
-                (pr,gr) =>
+                (pr, gr) =>
                     pr.Zip(gr,
-                        (p,g) => g == MINE ? MINE.ToString() : p.ToString())
-                .Aggregate((a,b) => $"{a}{b}"))
-                .Aggregate((a,b) => $"{a}\n{b}");
+                        (p, g) => g == MINE ? MINE.ToString() : p.ToString())
+                .Aggregate((a, b) => $"{a}{b}"))
+                .Aggregate((a, b) => $"{a}\n{b}");
         }
 
         public int[][] ProximityGrid()
         {
-            char[][][] center = {Left(), grid, Right()};
+            char[][][] center = { Left(), grid, Right() };
             var up = (from g in center select Up(g)).ToArray();
             var down = (from g in center select Down(g)).ToArray();
             var layers = up.Concat(center).Concat(down);
@@ -66,11 +66,13 @@ namespace Minesweeper
                         Add);
         }
 
-        private char[] EmptyRow() {
+        private char[] EmptyRow()
+        {
             return Enumerable.Repeat(EMPTY, x).ToArray();
         }
 
-        public char[][] Left() {
+        public char[][] Left()
+        {
             return Left(grid);
         }
         public char[][] Left(char[][] grid)
@@ -103,7 +105,6 @@ namespace Minesweeper
         {
             return Up(grid);
         }
-
         public char[][] Up(char[][] grid)
         {
             return
@@ -124,17 +125,17 @@ namespace Minesweeper
         {
             return
                 (from row in grid
-                select
-                 (from c in row
-                 select 0).ToArray()).ToArray();
+                 select
+                  (from c in row
+                   select 0).ToArray()).ToArray();
         }
 
         public static int[][] Add(int[][] acc, char[][] grid)
         {
             return acc.Zip(grid,
-                (ar,gr) =>
+                (ar, gr) =>
                     ar.Zip(gr,
-                        (a,g) => g == MINE ? a + 1 : a)
+                        (a, g) => g == MINE ? a + 1 : a)
                 .ToArray()).ToArray();
         }
 
@@ -142,7 +143,7 @@ namespace Minesweeper
         {
             return (from r in grid
                     select new string(r))
-                   .Aggregate((a,b) => $"{a}\n{b}");
+                   .Aggregate((a, b) => $"{a}\n{b}");
         }
     }
 }
