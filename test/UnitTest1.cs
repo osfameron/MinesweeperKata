@@ -10,15 +10,8 @@ namespace MinesweeperTests
     public class Tests
     {
         private Grid grid;
-        private const string pic1 = @"..*.
-....
-.*..
-....";
-
-        private const string pic1left = @".*..
-....
-*...
-....";
+        private const string pic1     = "..*.\n....\n.*..\n....";
+        private const string pic1left = ".*..\n....\n*...\n....";
 
         [Test]
         public void TestInvalidArguments()
