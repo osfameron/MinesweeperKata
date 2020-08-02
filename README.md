@@ -83,5 +83,61 @@ Despite the frequency of lookups, the speed I could find an answer and move on m
 Some things are harder to do ad hoc lookups for: I should actually learn Generics, for example, rather than trying to figure out how to write a Higher Order function zipping two grids together by skimming a few SO questions.
 (They are very similar to Haskell's type signatures, but you have to introduce the type variable, as with PureScript `forall`.)
 
+In general it all holds together, even coming from a preference for FP on the one hand and more Dynamic/lightweight OO languages on the other. The only unfortunate missing feature I think I've bounced against is a lack of first-class Array literals.
+
 # The Algorithm
-...
+
+Think of the grid as a 2D bitmask, with an empty space as 0 and mine as 1. So given the example grid:
+
+```
+*...
+....
+.*..
+....
+```
+we want to expand the bitmask in each of the 8 directions (cardinal and diagonal.)
+The easiest way to do this is to shift the whole grid in each of those directions
+and then overlay the masks together with `OR`. e.g.
+
+```
+orig    left    right          full
+*...    ....    .*..   etc. =  **..
+....    ....    ....           ***.
+.*..    *...    ..*.           ***.
+....    ....    ....           ***.
+```
+That's not quite right though! We don't just want a mask of all areas that are a mine
+(or adjacent to one.) Rather, we want a count of the number of adjacent mines.
+
+So instead of overlaying the masks together with `OR`, we need to SUM them together.
+This results in
+```
+1100
+2210
+1110
+1110
+```
+We do the overlay of multiple grids with a `reduce` (which is spelt `IEnumerable.Aggregate`
+in C# with Linq.)
+
+And we need one final transformation to reintroduce the mines if they existed in the original
+grid picture.
+
+All of these transformations over a grid are done by zipping over the rows and then over
+each row in turn, which I've encapsulated in a Higher Order Function called `ZipOverGrid`.
+(This is the reason I ended up having to figure out Just Enough Generics to handle 3 type
+variables and a function delegate...)
+
+# What's next?
+
+* Missing parts of Kata spec
+  * Implement console command
+  * Read input file
+  * Parse command and grid picture
+  * Output
+* improve C# idioms
+  * all the `.ToArray()` calls are clunky. Should I be using/passing a different structure, or handling converions differently?
+  * best practice for handling method preconditions (as in the `Grid()` constructor?
+  * ...
+  * what else am I missing? Comments welcome!
+
