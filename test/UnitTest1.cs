@@ -1,15 +1,13 @@
 using NUnit.Framework;
 using Minesweeper;
 using System.Linq;
-using System
-
-;
+using System;
+using Sprache;
 
 namespace MinesweeperTests
 {
     public class Tests
     {
-        private Grid grid;
         private const string pic1     = "..*.\n....\n.*..\n....";
         private const string pic1left = ".*..\n....\n*...\n....";
 
@@ -49,6 +47,14 @@ namespace MinesweeperTests
             var g = Grid.FromPicture("*.*\n.*.\n*.*");
             var expected = "*3*\n3*3\n*3*";
             Assert.AreEqual(expected, g.Output());
+        }
+
+        [Test]
+        public void TestParseSize()
+        {
+            Parser<(int,int)> p = Grid.sizeParser;
+            (int,int) size = p.Parse("4 4");
+            Assert.AreEqual((4,4), size);
         }
     }
 }

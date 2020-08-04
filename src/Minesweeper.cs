@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using Sprache;
 
 namespace Minesweeper
 {
@@ -40,6 +41,14 @@ namespace Minesweeper
                        .ToArray();
             return new Grid(rows);
         }
+
+        public static Parser<(int,int)> sizeParser =
+                from ys in Parse.Digit.Many().Text()
+                from _ in Parse.WhiteSpace
+                from xs in Parse.Digit.Many().Text()
+                let y = Int32.Parse(ys)
+                let x = Int32.Parse(xs)
+                select (y, x);
 
         public string Output()
         {
