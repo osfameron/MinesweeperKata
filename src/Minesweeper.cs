@@ -59,17 +59,15 @@ namespace Minesweeper
         public static Parser<char[]> RowParser(int x)
         {
             return
-                from cs in Parse.CharExcept(c => c == '\n', "not line-end").AtLeastOnce()
-                from _ in Parse.LineEnd
+                from cs in Parse.AnyChar.Repeat(x)
                 let chars = cs.ToArray()
-                where chars.Length == x
                 select chars;
         }
 
         public static Parser<char[][]> GridParser((int y, int x) size)
         {
             return
-                from rs in RowParser(size.x).AtLeastOnce()
+                from rs in RowParser(size.x).DelimitedBy(Parse.LineEnd)
                 let rows = rs.ToArray()
                 where rows.Length == size.y
                 select rows;
