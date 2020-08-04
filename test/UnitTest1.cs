@@ -53,8 +53,19 @@ namespace MinesweeperTests
         public void TestParseSize()
         {
             Parser<(int,int)> p = Grid.sizeParser;
-            (int,int) size = p.Parse("4 4");
-            Assert.AreEqual((4,4), size);
+            (int y,int x) size = p.Parse("3 4\n");
+            Assert.AreEqual((3,4), size);
+            Assert.AreEqual(3, size.y);
+            Assert.AreEqual(4, size.x);
+        }
+
+        [Test]
+        public void TestParseGrid()
+        {
+            Parser<Grid> p = Grid.gridParser;
+            Grid g = p.Parse("2 2\n.*\n*.\n");
+            Assert.AreEqual(2, g.y);
+            Assert.AreEqual(2, g.x);
         }
     }
 }

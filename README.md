@@ -133,7 +133,7 @@ variables and a function delegate...)
 * Missing parts of Kata spec
   * Implement console command
   * Read input file
-  * Parse command and grid picture
+  * ~Parse command and grid picture~ (using Sprache)
   * Output
 * improve C# idioms
   * all the `.ToArray()` calls are clunky. Should I be using/passing a different structure, or handling converions differently?

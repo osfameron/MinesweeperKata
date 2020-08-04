@@ -43,12 +43,37 @@ namespace Minesweeper
         }
 
         public static Parser<(int,int)> sizeParser =
-                from ys in Parse.Digit.Many().Text()
+                from ys in Parse.Digit.AtLeastOnce().Text()
                 from _ in Parse.WhiteSpace
-                from xs in Parse.Digit.Many().Text()
+                from xs in Parse.Digit.AtLeastOnce().Text()
                 let y = Int32.Parse(ys)
                 let x = Int32.Parse(xs)
+                from _2 in Parse.LineEnd
                 select (y, x);
+        
+        public static Parser<Grid> gridParser =
+            from size in sizeParser
+            from rows in GridParser(size)
+            select new Grid(rows);
+        
+        public static Parser<char[]> RowParser(int x)
+        {
+            return
+                from cs in Parse.CharExcept(c => c == '\n', "not line-end").AtLeastOnce()
+                from _ in Parse.LineEnd
+                let chars = cs.ToArray()
+                where chars.Length == x
+                select chars;
+        }
+
+        public static Parser<char[][]> GridParser((int y, int x) size)
+        {
+            return
+                from rs in RowParser(size.x).AtLeastOnce()
+                let rows = rs.ToArray()
+                where rows.Length == size.y
+                select rows;
+        }
 
         public string Output()
         {
