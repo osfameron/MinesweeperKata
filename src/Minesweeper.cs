@@ -74,15 +74,11 @@ namespace Minesweeper
                  select new string(r))
                 .Aggregate((a, b) => $"{a}\n{b}");
 
-        public TOut[][] ZipOverGrid<TOut, TIn1, TIn2>
-                    (TIn1[][] acc,
-                     TIn2[][] grid,
-                     Func<TIn1, TIn2, TOut> f) =>
+        public TOut[][] ZipOverGrid<TOut, TIn1, TIn2> (TIn1[][] acc, TIn2[][] grid, Func<TIn1, TIn2, TOut> f) =>
                 acc.Zip(
                     grid,
-                    (ar, gr) =>
-                        ar.Zip(gr, f)
-                        .ToArray()).ToArray();
+                    (ar, gr) => ar.Zip(gr, f).ToArray())
+                .ToArray();
 
         private static int Add(int a, char g) =>
                 g == MINE ? a + 1 : a;
@@ -93,17 +89,19 @@ namespace Minesweeper
         private Grid ReinsertMines(int[][] pg) =>
                 new Grid(ZipOverGrid(pg, grid, Reinsert));
 
-        private int[][] ProximityGrid()
+        private char[][][] ProximityLayers()
         {
             char[][][] center = { Left(), grid, Right() };
-            var up = (from g in center select Up(g)).ToArray();
-            var down = (from g in center select Down(g)).ToArray();
-            var layers = up.Concat(center).Concat(down);
+            char[][][] up   = center.Select(Up).ToArray();
+            char[][][] down = center.Select(Down).ToArray();
+            return up.Concat(center).Concat(down).ToArray();
+        }
 
-            return layers.Aggregate(
+        private int[][] ProximityGrid() =>
+                ProximityLayers()
+                    .Aggregate(
                         Zeros(),
                         (acc, grid) => ZipOverGrid(acc, grid, Add));
-        }
 
         private char[] EmptyRow() =>
                 Enumerable.Repeat(EMPTY, x).ToArray();
