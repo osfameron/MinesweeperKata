@@ -136,7 +136,9 @@ variables and a function delegate...)
   * ~Parse command and grid picture~ (using Sprache)
   * Output
 * improve C# idioms
-  * all the `.ToArray()` calls are clunky. Should I be using/passing a different structure, or handling converions differently?
+  * Extracted `Grid<T>` class which neatens this up a bit. ~All the `.ToArray()` calls are clunky. Should I be using/passing a different structure, or handling conversions differently?~
+  * ~Expression bodied methods~
+  * ~`get`ters~
   * best practice for handling method preconditions (as in the `Grid()` constructor?
   * ...
   * what else am I missing? Comments welcome!
