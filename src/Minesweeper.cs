@@ -4,7 +4,7 @@ using Sprache;
 
 namespace Minesweeper
 {
-    public class Grid
+    public class Game
     {
         public const char EMPTY = '.';
         public const char MINE = '*';
@@ -13,7 +13,7 @@ namespace Minesweeper
 
         private char[][] grid;
 
-        public Grid(char[][] rows)
+        public Game(char[][] rows)
         {
             grid = rows;
             y = rows.Length;
@@ -35,8 +35,8 @@ namespace Minesweeper
             #endregion
         }
 
-        public static Grid FromPicture(string picture) =>
-                new Grid(
+        public static Game FromPicture(string picture) =>
+                new Game(
                     (from l in picture.Split("\n")
                     select l.ToCharArray())
                     .ToArray());
@@ -49,10 +49,10 @@ namespace Minesweeper
                 from _lineEnd in Parse.LineEnd
                 select (y, x);
         
-        public static Parser<Grid> gridParser =>
+        public static Parser<Game> gridParser =>
                 from size in sizeParser
                 from rows in GridParser(size)
-                select new Grid(rows);
+                select new Game(rows);
         
         public static Parser<char[]> RowParser(int x) =>
                 from cs in Parse.Chars(new [] {EMPTY, MINE}).Repeat(x)
@@ -86,8 +86,8 @@ namespace Minesweeper
         private static char Reinsert(int a, char g) =>
                 g == MINE ? MINE : a.ToString()[0];
 
-        private Grid ReinsertMines(int[][] pg) =>
-                new Grid(ZipOverGrid(pg, grid, Reinsert));
+        private Game ReinsertMines(int[][] pg) =>
+                new Game(ZipOverGrid(pg, grid, Reinsert));
 
         private char[][][] ProximityLayers()
         {
