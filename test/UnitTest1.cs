@@ -1,6 +1,5 @@
 using NUnit.Framework;
 using Minesweeper;
-using System.Linq;
 using System;
 using Sprache;
 
@@ -66,6 +65,16 @@ namespace MinesweeperTests
             Game g = p.Parse("2 2\n.*\n*.\n");
             Assert.AreEqual(2, g.Y);
             Assert.AreEqual(2, g.X);
+        }
+
+        [Test]
+        public void TestIndexGrid()
+        {
+            Grid<int> g = new Grid<int>(new int[][] { new int[] {1, 2}, new int[] {3, 4} });
+            Assert.AreEqual(1, g[0,0]);
+            Assert.AreEqual(2, g[0,1]);
+            Assert.AreEqual(3, g[1,0]);
+            Assert.AreEqual(4, g[1,1]);
         }
     }
 }

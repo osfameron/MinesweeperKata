@@ -146,6 +146,12 @@ namespace Minesweeper
         /// <summary> Horizontal size of grid </summary>
         public int X { get; }
 
+        /// <summary> Grid can be indexed as <c>grid[y][x]</c> </summary>
+        public T this[int y, int x] {
+            get { return Data[y][x]; }
+            set { Data[y][x] = value; }
+        }
+
         /// <summary> The constructor takes a nested array, and ensures it's well formed as a grid </summary>
         public Grid (T[][] rows) {
             Data = rows;
