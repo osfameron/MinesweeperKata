@@ -55,7 +55,7 @@ namespace Minesweeper
                 select new Grid(rows);
         
         public static Parser<char[]> RowParser(int x) =>
-                from cs in Parse.AnyChar.Repeat(x)
+                from cs in Parse.Chars(new [] {EMPTY, MINE}).Repeat(x)
                 let chars = cs.ToArray()
                 select chars;
 
