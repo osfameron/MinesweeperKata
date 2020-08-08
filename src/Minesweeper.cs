@@ -138,8 +138,12 @@ namespace Minesweeper
     */
     public class Grid<T>
     {
-        public T[][] Data { get; }
+        private T[][] Data { get; }
+
+        /// <summary> Vertical size of grid </summary>
         public int Y { get; }
+
+        /// <summary> Horizontal size of grid </summary>
         public int X { get; }
 
         /// <summary> The constructor takes a nested array, and ensures it's well formed as a grid </summary>
