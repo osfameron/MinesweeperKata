@@ -34,82 +34,64 @@ namespace Minesweeper
             }
             #endregion
         }
-        public static Grid FromPicture(string picture)
-        {
-            var rows = (from l in picture.Split("\n")
-                        select l.ToCharArray())
-                       .ToArray();
-            return new Grid(rows);
-        }
 
-        public static Parser<(int,int)> sizeParser =
-                from ys in Parse.Digit.AtLeastOnce().Text()
-                from _ in Parse.WhiteSpace
+        public static Grid FromPicture(string picture) =>
+                new Grid(
+                    (from l in picture.Split("\n")
+                    select l.ToCharArray())
+                    .ToArray());
+
+        public static Parser<(int,int)> sizeParser =>
+                from ys in Parse.Digit.AtLeastOnce().Text().Token()
                 from xs in Parse.Digit.AtLeastOnce().Text()
                 let y = Int32.Parse(ys)
                 let x = Int32.Parse(xs)
-                from _2 in Parse.LineEnd
+                from _lineEnd in Parse.LineEnd
                 select (y, x);
         
-        public static Parser<Grid> gridParser =
-            from size in sizeParser
-            from rows in GridParser(size)
-            select new Grid(rows);
+        public static Parser<Grid> gridParser =>
+                from size in sizeParser
+                from rows in GridParser(size)
+                select new Grid(rows);
         
-        public static Parser<char[]> RowParser(int x)
-        {
-            return
+        public static Parser<char[]> RowParser(int x) =>
                 from cs in Parse.AnyChar.Repeat(x)
                 let chars = cs.ToArray()
                 select chars;
-        }
 
-        public static Parser<char[][]> GridParser((int y, int x) size)
-        {
-            return
+        public static Parser<char[][]> GridParser((int y, int x) size) =>
                 from rs in RowParser(size.x).DelimitedBy(Parse.LineEnd)
                 let rows = rs.ToArray()
                 where rows.Length == size.y
                 select rows;
-        }
 
-        public string Output()
-        {
-            return
+        public string Output() =>
                 ReinsertMines(ProximityGrid())
                 .ToString();
-        }
 
-        public override string ToString()
-        {
-            return (from r in grid
-                    select new string(r))
-                   .Aggregate((a, b) => $"{a}\n{b}");
-        }
+        public override string ToString() =>
+                (from r in grid
+                 select new string(r))
+                .Aggregate((a, b) => $"{a}\n{b}");
 
-        public TOut[][] ZipOverGrid<TOut, TIn1, TIn2>(
-                                            TIn1[][] acc,
-                                            TIn2[][] grid,
-                                            Func<TIn1, TIn2, TOut> f)
-        {
-            return acc.Zip(grid,
-                (ar, gr) =>
-                    ar.Zip(gr, f)
-                .ToArray()).ToArray();
-        }
+        public TOut[][] ZipOverGrid<TOut, TIn1, TIn2>
+                    (TIn1[][] acc,
+                     TIn2[][] grid,
+                     Func<TIn1, TIn2, TOut> f) =>
+                acc.Zip(
+                    grid,
+                    (ar, gr) =>
+                        ar.Zip(gr, f)
+                        .ToArray()).ToArray();
 
-        private static int Add(int a, char g)
-        {
-            return g == MINE ? a + 1 : a;
-        }
+        private static int Add(int a, char g) =>
+                g == MINE ? a + 1 : a;
 
-        private Grid ReinsertMines(int[][] pg)
-        {
-            var final = ZipOverGrid(pg,
-                                    grid,
-                                    (p, g) => g == MINE ? MINE : p.ToString()[0]);
-            return new Grid(final);
-        }
+        private static char Reinsert(int a, char g) =>
+                g == MINE ? MINE : a.ToString()[0];
+
+        private Grid ReinsertMines(int[][] pg) =>
+                new Grid(ZipOverGrid(pg, grid, Reinsert));
 
         private int[][] ProximityGrid()
         {
@@ -123,51 +105,39 @@ namespace Minesweeper
                         (acc, grid) => ZipOverGrid(acc, grid, Add));
         }
 
-        private char[] EmptyRow()
-        {
-            return Enumerable.Repeat(EMPTY, x).ToArray();
-        }
+        private char[] EmptyRow() =>
+                Enumerable.Repeat(EMPTY, x).ToArray();
 
-        private char[][] Left()
-        {
-            return
+        private char[][] Left() =>
                 (from r in grid
                  select r
                     .Skip(1)
                     .Append(EMPTY)
                     .ToArray())
                  .ToArray();
-        }
 
-        private char[][] Right()
-        {
-            return
+        private char[][] Right() =>
                 (from r in grid
                  select r
                     .SkipLast(1)
                     .Prepend(EMPTY)
                     .ToArray())
                  .ToArray();
-        }
 
-        private char[][] Up(char[][] grid)
-        {
-            return
-                grid.Skip(1).Append(EmptyRow()).ToArray();
-        }
-        private char[][] Down(char[][] grid)
-        {
-            return
-                grid.SkipLast(1).Prepend(EmptyRow()).ToArray();
-        }
+        private char[][] Up(char[][] grid) =>
+                grid.Skip(1)
+                    .Append(EmptyRow())
+                    .ToArray();
 
-        private int[][] Zeros()
-        {
-            return
+        private char[][] Down(char[][] grid) =>
+                grid.SkipLast(1)
+                    .Prepend(EmptyRow())
+                    .ToArray();
+
+        private int[][] Zeros() =>
                 (from row in grid
                  select
                   (from c in row
                    select 0).ToArray()).ToArray();
-        }
     }
 }
