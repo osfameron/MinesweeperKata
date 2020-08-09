@@ -85,6 +85,18 @@ Some things are harder to do ad hoc lookups for: I should actually learn Generic
 
 In general it all holds together, even coming from a preference for FP on the one hand and more Dynamic/lightweight OO languages on the other. The only unfortunate missing feature I think I've bounced against is a lack of first-class Array literals.
 
+## More thoughts
+
+Generics is fun and a big, rewarding subject. The type system is nice, *but* not as capable as a Hindley-Milner, and of course, much wordier.
+
+As you stack more details to the left of a declaration:
+
+    public static override Generic<T> Foo (...)
+
+it becomes increasingly difficult to spot the *name* of a method. Considering how important these are, this is a design mistake. (Inherited from Java of course. Kotlin and others get this right, instead of perpetuating the mistake.)
+
+Expression bodied members are very nice. As Jon Skeet points out, this kind of small sugar makes much more difference than you'd expect.
+
 # The Algorithm
 
 Think of the grid as a 2D bitmask, with an empty space as 0 and mine as 1. So given the example grid:
