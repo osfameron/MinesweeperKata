@@ -49,19 +49,6 @@ namespace Minesweeper
                     select l.ToCharArray())
                     .ToArray());
 
-        /** <summary>
-            Static factory, creating a <c>Game</c> from the Kata-specified
-            format of y-size, x-size, and a grid picture.
-
-            <example><code>
-            2 3
-            ..*
-            .*.</code></example>
-            </summary>
-        */
-        public static Game Parsed(string picture) =>
-            Grammar.GamePicture.Parse(picture);
-
         /// <summary> Delegate ToString to the underlying grid </summary>?
         public override string ToString() =>
                 grid.ToString();
@@ -104,11 +91,23 @@ namespace Minesweeper
     }
 
     /// <summary> Parsers for Minesweeper grid </summary>
-    public class Grammar
+    public class Parser
     {
+        /** <summary>
+            Static factory, creating a <c>Game</c> from the Kata-specified
+            format of y-size, x-size, and a grid picture.
+
+            <example><code>
+            2 3
+            ..*
+            .*.</code></example>
+            </summary>
+        */
+        public static Game ParseGame(string picture) =>
+            GamePicture.Parse(picture);
 
         /// <summary> Main parser for a game Grid </summary>
-        public static Parser<Game> GamePicture =>
+        private static Parser<Game> GamePicture =>
                 from size in Size
                 from rows in SizedGrid(size)
                 select new Game(rows);

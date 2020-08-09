@@ -51,7 +51,7 @@ namespace MinesweeperTests
         [Test]
         public void TestParseGrid()
         {
-            Game g = Game.Parsed("2 2\n.*\n*.\n");
+            Game g = Parser.ParseGame("2 2\n.*\n*.\n");
             Assert.AreEqual(2, g.Y);
             Assert.AreEqual(2, g.X);
         }
