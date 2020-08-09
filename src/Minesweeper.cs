@@ -40,7 +40,7 @@ namespace Minesweeper
             Static factory, creating a <c>Game</c> from a string picture.
             This method currently does no validation of the input grid.
             
-            See <c>gridParser</c> for a better approach.
+            See <c>Parsed</c> below for a better approach.
             </summary>
         */
         public static Game FromPicture(string picture) =>
@@ -59,34 +59,8 @@ namespace Minesweeper
             .*.</code></example>
             </summary>
         */
-        public static Parser<Game> gridParser =>
-                from size in sizeParser
-                from rows in GridParser(size)
-                select new Game(rows);
-
-        /// <summary> Parser for the <c>y x</c> format to declare size</summary>
-        public static Parser<(int,int)> sizeParser =>
-                from ys in Parse.Digit.AtLeastOnce().Text().Token()
-                from xs in Parse.Digit.AtLeastOnce().Text()
-                let y = Int32.Parse(ys)
-                let x = Int32.Parse(xs)
-                from _ in Parse.LineEnd
-                select (y, x);
-        
-        /// <summary> Parser for a game row full of <c>.</c> and <c>*</c> characters </summary>
-        public static Parser<char[]> RowParser(int x) =>
-                from cs in Parse.Chars(new [] {EMPTY, MINE})
-                           .Repeat(x)
-                let chars = cs.ToArray()
-                select chars;
-
-        /// <summary> Parser for a game grid of a specific size </summary>
-        public static Parser<char[][]> GridParser((int y, int x) size) =>
-                from rs in RowParser(size.x)
-                           .DelimitedBy(Parse.LineEnd)
-                let rows = rs.ToArray()
-                where rows.Length == size.y
-                select rows;
+        public static Game Parsed(string picture) =>
+            Grammar.GamePicture.Parse(picture);
 
         /// <summary> Delegate ToString to the underlying grid </summary>?
         public override string ToString() =>
@@ -127,6 +101,41 @@ namespace Minesweeper
         private Grid<char> ReinsertMines(Grid<int> pg) =>
                 pg.Zip(grid, Reinsert);
     
+    }
+
+    /// <summary> Parsers for Minesweeper grid </summary>
+    public class Grammar
+    {
+
+        /// <summary> Main parser for a game Grid </summary>
+        public static Parser<Game> GamePicture =>
+                from size in Size
+                from rows in SizedGrid(size)
+                select new Game(rows);
+
+        /// <summary> Parser for the <c>y x</c> format to declare size</summary>
+        private static Parser<(int,int)> Size =>
+                from ys in Parse.Digit.AtLeastOnce().Text().Token()
+                from xs in Parse.Digit.AtLeastOnce().Text()
+                let y = Int32.Parse(ys)
+                let x = Int32.Parse(xs)
+                from _ in Parse.LineEnd
+                select (y, x);
+        
+        /// <summary> Parser for a game row full of <c>.</c> and <c>*</c> characters </summary>
+        private static Parser<char[]> SizedRow(int x) =>
+                from cs in Parse.Chars(new [] {Game.EMPTY, Game.MINE})
+                           .Repeat(x)
+                let chars = cs.ToArray()
+                select chars;
+
+        /// <summary> Parser for a game grid of a specific size </summary>
+        private static Parser<char[][]> SizedGrid((int y, int x) size) =>
+                from rs in SizedRow(size.x)
+                           .DelimitedBy(Parse.LineEnd)
+                let rows = rs.ToArray()
+                where rows.Length == size.y
+                select rows;
     }
 
     /** <summary>
@@ -200,10 +209,11 @@ namespace Minesweeper
                         .Select(row => aggregateRow(row))
                         .ToArray());
 
-        // this is basically a delegate for Grid<T>, is there a builtin way of doing this in C#?
+        /// <summary> basically a delegate for Grid{T} </summary>
+        // is there a builtin way of doing this in C#?
         private Grid<T> Reform(T[][] rows) => new Grid<T> (rows);
 
-        // A Row of the given element.
+        /// <summary> A Row of the given element. </summary>
         private T[] RowOf(T r) =>
                 Enumerable.Repeat(r, X).ToArray();
 
