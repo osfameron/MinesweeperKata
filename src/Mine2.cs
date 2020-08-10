@@ -34,27 +34,29 @@ namespace Mine2
             (Direction) (((int) dir + (int) perp) / 2);
     }
 
-    public class Cell
+    public class Cell<T>
     {
 
-        public Dictionary<Direction, Cell> Neighbours { get; }
+        public T Value { get; }
+        public Dictionary<Direction, Cell<T>> Neighbours { get; }
 
-        public Cell()
+        public Cell(T value)
         {
-            Neighbours = new Dictionary<Direction, Cell> {};
+            Value = value;
+            Neighbours = new Dictionary<Direction, Cell<T>> {};
         }
 
-        public Cell? this[Direction dir] => Neighbours[dir];
+        public Cell<T>? this[Direction dir] => Neighbours[dir];
 
-        public void Connect(Direction dir, Cell other)
+        public void Connect(Direction dir, Cell<T> other)
         {
             Neighbours.Add(dir, other);
             other.Neighbours.Add(Opposite(dir), this);
         }
 
-        public static Cell Lattice(int y, int x)
+        public static Cell<T> Lattice(int y, int x, T value)
         {
-            Cell c = new Cell();
+            var c = new Cell<T>(value);
             foreach (var _ in Enumerable.Range(1, y - 1)) {
                 c = c.Grow(N);
             }
@@ -64,9 +66,9 @@ namespace Mine2
             return c;
         }
 
-        public IEnumerable<Cell> Traverse(Direction dir)
+        public IEnumerable<Cell<T>> Traverse(Direction dir)
         {
-            Cell c = this;
+            var c = this;
             while (c != null)
             {
                 yield return c;
@@ -74,31 +76,31 @@ namespace Mine2
             }
         }
 
-        public Cell Grow(Direction dir)
+        public Cell<T> Grow(Direction dir)
         {
             AssertCardinal(dir);
 
-            Cell other = Grow_(dir);
+            var other = Grow_(dir);
             Grow(dir, Rotate(dir, 2));
             Grow(dir, Rotate(dir, -2));
 
             return other;
         }
 
-        private Cell Grow_(Direction dir)
+        private Cell<T> Grow_(Direction dir)
         {
-            Cell other = new Cell();
+            var other = new Cell<T>(Value);
             Connect(dir, other);
             return other;
         }
 
         private void Grow(Direction dir, Direction perp)
         {
-            Cell? p = Neighbours.GetValueOrDefault(perp, null);
+            Cell<T>? p = Neighbours.GetValueOrDefault(perp, null);
             if (p is null) return;
 
-            Cell q = p.Grow_(dir);
-            Cell r = Neighbours[dir];
+            Cell<T> q = p.Grow_(dir);
+            Cell<T> r = Neighbours[dir];
 
             Connect(Mid(dir, perp), q);
             p.Connect(Mid(dir, Opposite(perp)), r);

@@ -28,10 +28,10 @@ namespace Mine2Tests
         [Test]
         public void CellConnectTest()
         {
-            Cell c1 = new Cell();
+            var c1 = new Cell<int>(0);
             Assert.AreEqual(0, c1.Neighbours.Count);
 
-            Cell c2 = new Cell();
+            var c2 = new Cell<int>(0);
 
             c1.Connect(E, c2);
             Assert.AreEqual(1, c1.Neighbours.Count);
@@ -42,13 +42,13 @@ namespace Mine2Tests
 
             Assert.Throws<ArgumentException>(
                 () => {
-                    Cell c3 = new Cell();
+                    var c3 = new Cell<int>(0);
                     c1.Connect(E, c3);
                 });
 
             Assert.Throws<ArgumentException>(
                 () => {
-                    Cell c3 = new Cell();
+                    var c3 = new Cell<int>(0);
                     c3.Connect(W, c1);
                 });
         }
@@ -56,12 +56,12 @@ namespace Mine2Tests
         [Test]
         public void CellGrowTest()
         {
-            Cell c1 = new Cell();
-            Cell c2 = c1.Grow(E);
+            var c1 = new Cell<int>(0);
+            var c2 = c1.Grow(E);
             Assert.AreEqual(c1.Neighbours[E], c2);
             Assert.AreEqual(c2.Neighbours[W], c1);
 
-            Cell c3 = c1.Grow(S);
+            var c3 = c1.Grow(S);
             Assert.AreEqual(c1.Neighbours[S], c3);
             Assert.AreEqual(c3.Neighbours[N], c1);  
             Assert.AreEqual(c1.Neighbours[SE],  c2.Neighbours[S]); 
@@ -70,8 +70,8 @@ namespace Mine2Tests
             Assert.AreEqual(c3.Neighbours[E], c2.Neighbours[S]);     
 
             Assert.Throws<ArgumentException>(() => {
-                    Cell cx = new Cell();
-                    Cell cy = cx.Grow(NE);
+                    var cx = new Cell<int>(0);
+                    var cy = cx.Grow(NE);
             });
         }
 
@@ -79,9 +79,9 @@ namespace Mine2Tests
         // 3x3 lattice test
         public void CellGrowLatticeTest()
         {
-            Cell nw = new Cell();
-            Cell ne = nw.Grow(E).Grow(E);
-            Cell se = ne.Grow(S).Grow(S);
+            var nw = new Cell<int>(0);
+            var ne = nw.Grow(E).Grow(E);
+            var se = ne.Grow(S).Grow(S);
             Assert.AreEqual(se, nw[SE][SE]);
             Assert.AreEqual(se, nw[S][S][E][E]);
             Assert.AreEqual(se, nw[E][E][S][S]);
@@ -92,9 +92,10 @@ namespace Mine2Tests
         [Test]
         public void LatticeTest()
         {
-            Cell c = Cell.Lattice(3,5);
+            var c = Cell<int>.Lattice(3,5, 0);
             Assert.AreEqual(5, c.Traverse(E).Count());
             Assert.AreEqual(3, c.Traverse(S).Count());
+            Assert.AreEqual(new []{0,0,0}, c.Traverse(S).Select(v => v.Value).ToArray());
         }
 
     }
