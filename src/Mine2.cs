@@ -14,6 +14,9 @@ namespace Mine2
 
         public static Direction Rotate(Direction r, int c) =>
             (Direction) Mod((int) r + c, DIR);
+
+        public static Direction Opposite(Direction r) =>
+            Rotate(r, 4);
     }
 
     public class Cell
@@ -23,6 +26,12 @@ namespace Mine2
         public Cell()
         {
             Neighbours = new Dictionary<Rose.Direction, Cell> {};
+        }
+
+        public void Connect(Rose.Direction dir, Cell other)
+        {
+            Neighbours[dir] = other;
+            other.Neighbours[Rose.Opposite(dir)] = this;
         }
     }
 }
