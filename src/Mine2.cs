@@ -4,11 +4,15 @@ namespace Mine2
 {
     public class Rose
     {
+        /// <summary> Compass Rose of all 8 directions, in Clockwise order </summary>
         public enum Direction { N, NE, E, SE, S, SW, W, NW };
-        public static Direction Rotate(Direction r, int c)
-        {
-            return (Direction) ((int) r + c);
-        }
+        private const int DIR = 8;
+
+        /// <summary> Actual mathematical modulus rather than remainder </summary>
+        private static int Mod (int x, int m) => (x % m + m) % m;
+
+        public static Direction Rotate(Direction r, int c) =>
+            (Direction) Mod((int) r + c, DIR);
     }
 
     public class Cell
