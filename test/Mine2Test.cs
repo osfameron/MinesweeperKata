@@ -19,5 +19,12 @@ namespace Mine2Tests
             Assert.AreEqual(N, Rotate(S, 4));
         }
 
+        [Test]
+        public void CellTest()
+        {
+            Cell c = new Cell();
+            Assert.AreEqual(0, c.Neighbours.Count);
+        }
+
     }
 }

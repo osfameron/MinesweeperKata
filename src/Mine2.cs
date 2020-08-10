@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Mine2
 {
@@ -17,6 +18,11 @@ namespace Mine2
 
     public class Cell
     {
+        public Dictionary<Rose.Direction, Cell> Neighbours { get; }
 
+        public Cell()
+        {
+            Neighbours = new Dictionary<Rose.Direction, Cell> {};
+        }
     }
 }
