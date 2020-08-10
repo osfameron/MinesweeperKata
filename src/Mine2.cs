@@ -11,7 +11,16 @@ namespace Mine2
 
     public static class Extensions
     {
-        public static Func<Cell<Piece>, string> PieceOut = p => (p.Value == Piece.Empty) ? "." : "*";
+        private static Func<Cell<Piece>, bool> IsMine = p => p.Value == Piece.Mine;
+        public static Func<Cell<Piece>, string> PieceOut = p => IsMine(p) ? "*" : ".";
+        public static Func<Cell<Piece>, string> CountOut =
+            p => IsMine(p)
+                ? "*"
+                : p.Neighbours
+                   .Values
+                   .Where(IsMine)
+                   .Count()
+                   .ToString();
     }
     
     public class Rose

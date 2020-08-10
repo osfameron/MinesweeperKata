@@ -113,11 +113,13 @@ namespace Mine2Tests
         {
             var c = Cell<Piece>.Lattice(5,5, Piece.Empty);
             Assert.AreEqual(".....\n.....\n.....\n.....\n.....", c.ToGridString(PieceOut));
+            Assert.AreEqual("00000\n00000\n00000\n00000\n00000", c.ToGridString(CountOut));
 
             c[2,2] = Piece.Mine;
             c[1,3] = Piece.Mine;
             c[2,4] = Piece.Mine;
             Assert.AreEqual(".....\n...*.\n..*.*\n.....\n.....", c.ToGridString(PieceOut));
+            Assert.AreEqual("00111\n012*2\n01*3*\n01121\n00000", c.ToGridString(CountOut));
 
         }
 
