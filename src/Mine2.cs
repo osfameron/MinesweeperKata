@@ -36,19 +36,20 @@ namespace Mine2
 
     public class Cell
     {
-        public Dictionary<Rose.Direction, Cell> Neighbours { get; }
+
+        public Dictionary<Direction, Cell> Neighbours { get; }
 
         public Cell()
         {
-            Neighbours = new Dictionary<Rose.Direction, Cell> {};
+            Neighbours = new Dictionary<Direction, Cell> {};
         }
 
-        public Cell? this[Rose.Direction dir] => Neighbours[dir];
+        public Cell? this[Direction dir] => Neighbours[dir];
 
-        public void Connect(Rose.Direction dir, Cell other)
+        public void Connect(Direction dir, Cell other)
         {
             Neighbours.Add(dir, other);
-            other.Neighbours.Add(Rose.Opposite(dir), this);
+            other.Neighbours.Add(Opposite(dir), this);
         }
 
         public static Cell Lattice(int y, int x)
@@ -73,25 +74,25 @@ namespace Mine2
             }
         }
 
-        public Cell Grow(Rose.Direction dir)
+        public Cell Grow(Direction dir)
         {
-            Rose.AssertCardinal(dir);
+            AssertCardinal(dir);
 
             Cell other = Grow_(dir);
-            Grow(dir, Rose.Rotate(dir, 2));
-            Grow(dir, Rose.Rotate(dir, -2));
+            Grow(dir, Rotate(dir, 2));
+            Grow(dir, Rotate(dir, -2));
 
             return other;
         }
 
-        private Cell Grow_(Rose.Direction dir)
+        private Cell Grow_(Direction dir)
         {
             Cell other = new Cell();
             Connect(dir, other);
             return other;
         }
 
-        private void Grow(Rose.Direction dir, Rose.Direction perp)
+        private void Grow(Direction dir, Direction perp)
         {
             Cell? p = Neighbours.GetValueOrDefault(perp, null);
             if (p is null) return;
@@ -99,8 +100,8 @@ namespace Mine2
             Cell q = p.Grow_(dir);
             Cell r = Neighbours[dir];
 
-            Connect(Rose.Mid(dir, perp), q);
-            p.Connect(Rose.Mid(dir, Rose.Opposite(perp)), r);
+            Connect(Mid(dir, perp), q);
+            p.Connect(Mid(dir, Opposite(perp)), r);
             r.Connect(perp, q);
 
             p.Grow(dir, perp);
