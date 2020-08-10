@@ -44,7 +44,7 @@ namespace Mine2
     public class Cell<T>
     {
 
-        public T Value { get; }
+        public T Value { get; set; }
         public Dictionary<Direction, Cell<T>> Neighbours { get; }
 
         public Cell(T value)
@@ -71,6 +71,19 @@ namespace Mine2
                 c = c.Grow(W);
             }
             return c;
+        }
+
+        public T this[int y, int x] {
+            get => Traverse(E)
+                   .ElementAt(x)
+                   .Traverse(S)
+                   .ElementAt(y)
+                   .Value;
+            set => Traverse(E)
+                  .ElementAt(x)
+                  .Traverse(S)
+                  .ElementAt(y)
+                  .Value = value;
         }
 
         public IEnumerable<Cell<T>> Traverse(Direction dir)
