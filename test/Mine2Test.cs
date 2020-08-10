@@ -36,6 +36,18 @@ namespace Mine2Tests
             Assert.AreEqual(c1.Neighbours[E], c2);
             Assert.AreEqual(c2.Neighbours[W], c1);
 
+            Assert.Throws<ArgumentException>(
+                () => {
+                    Cell c3 = new Cell();
+                    c1.Connect(E, c3);
+                });
+
+            Assert.Throws<ArgumentException>(
+                () => {
+                    Cell c3 = new Cell();
+                    c3.Connect(W, c1);
+                });
+
         }
 
     }

@@ -30,8 +30,8 @@ namespace Mine2
 
         public void Connect(Rose.Direction dir, Cell other)
         {
-            Neighbours[dir] = other;
-            other.Neighbours[Rose.Opposite(dir)] = this;
+            Neighbours.Add(dir, other);
+            other.Neighbours.Add(Rose.Opposite(dir), this);
         }
     }
 }
