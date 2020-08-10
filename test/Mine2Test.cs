@@ -74,5 +74,19 @@ namespace Mine2Tests
             });
         }
 
+        [Test]
+        // 3x3 lattice test
+        public void CellGrowLatticeTest()
+        {
+            Cell nw = new Cell();
+            Cell ne = nw.Grow(E).Grow(E);
+            Cell se = ne.Grow(S).Grow(S);
+            Assert.AreEqual(se, nw[SE][SE]);
+            Assert.AreEqual(se, nw[S][S][E][E]);
+            Assert.AreEqual(se, nw[E][E][S][S]);
+            Assert.AreEqual(nw, ne[S][NW][W]);
+            Assert.AreEqual(nw, se[W][W][N][N]);
+        }
+
     }
 }

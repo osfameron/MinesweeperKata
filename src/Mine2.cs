@@ -39,6 +39,8 @@ namespace Mine2
             Neighbours = new Dictionary<Rose.Direction, Cell> {};
         }
 
+        public Cell? this[Rose.Direction dir] => Neighbours[dir];
+
         public void Connect(Rose.Direction dir, Cell other)
         {
             Neighbours.Add(dir, other);
