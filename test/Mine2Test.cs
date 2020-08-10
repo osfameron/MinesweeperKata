@@ -2,6 +2,7 @@ using NUnit.Framework;
 using Mine2;
 using static Mine2.Rose;
 using static Mine2.Rose.Direction;
+using static Mine2.Extensions;
 
 using System;
 using System.Linq;
@@ -103,6 +104,15 @@ namespace Mine2Tests
             Assert.AreEqual(5, c.Traverse(E).Count());
             Assert.AreEqual(3, c.Traverse(S).Count());
             Assert.AreEqual(new []{0,0,0}, c.Traverse(S).Select(v => v.Value).ToArray());
+
+            Assert.AreEqual("00000\n00000\n00000", c.ToGridString());
+        }
+
+        [Test]
+        public void MinesweeperTest()
+        {
+            var c = Cell<Piece>.Lattice(5,5, Piece.Empty);
+            Assert.AreEqual(".....\n.....\n.....\n.....\n.....", c.ToGridString(PieceOut));
         }
 
     }

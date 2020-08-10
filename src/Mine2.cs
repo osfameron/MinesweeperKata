@@ -7,6 +7,13 @@ using static Mine2.Rose.Direction;
 
 namespace Mine2
 {
+    public enum Piece { Empty, Mine };
+
+    public static class Extensions
+    {
+        public static Func<Cell<Piece>, string> PieceOut = p => (p.Value == Piece.Empty) ? "." : "*";
+    }
+    
     public class Rose
     {
         /// <summary> Compass Rose of all 8 directions, in Clockwise order </summary>
@@ -76,6 +83,16 @@ namespace Mine2
             }
         }
 
+        public override string ToString() => Value.ToString();
+
+        public string ToGridString() => ToGridString(c => c.ToString());
+        public string ToGridString(Func<Cell<T>, string> f) =>
+            String.Join('\n',
+                from row in Traverse(S)
+                select String.Concat(
+                    (from cell in row.Traverse(E)
+                    select f(cell))));
+
         public Cell<T> Grow(Direction dir)
         {
             AssertCardinal(dir);
@@ -96,7 +113,7 @@ namespace Mine2
 
         private void Grow(Direction dir, Direction perp)
         {
-            Cell<T>? p = Neighbours.GetValueOrDefault(perp, null);
+            Cell<T> p = Neighbours.GetValueOrDefault(perp, null);
             if (p is null) return;
 
             Cell<T> q = p.Grow_(dir);
