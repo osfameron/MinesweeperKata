@@ -87,6 +87,13 @@ namespace Mine2Tests
             Assert.AreEqual(se, nw[E][E][S][S]);
             Assert.AreEqual(nw, ne[S][NW][W]);
             Assert.AreEqual(nw, se[W][W][N][N]);
+
+            Assert.AreEqual(3, nw.Neighbours.Count);
+            Assert.AreEqual(8, nw[E][S].Neighbours.Count);
+            Assert.AreEqual(5, nw[E].Neighbours.Count);
+            Assert.AreEqual(3, nw[E][E].Neighbours.Count);
+            Assert.AreEqual(3, nw[S][S].Neighbours.Count);
+            Assert.AreEqual(3, nw[E][E][S][S].Neighbours.Count);
         }
 
         [Test]
