@@ -1,5 +1,9 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
+
+using static Mine2.Rose;
+using static Mine2.Rose.Direction;
 
 namespace Mine2
 {
@@ -45,6 +49,28 @@ namespace Mine2
         {
             Neighbours.Add(dir, other);
             other.Neighbours.Add(Rose.Opposite(dir), this);
+        }
+
+        public static Cell Lattice(int y, int x)
+        {
+            Cell c = new Cell();
+            foreach (var _ in Enumerable.Range(1, y - 1)) {
+                c = c.Grow(N);
+            }
+            foreach (var _ in Enumerable.Range(1, x - 1)) {
+                c = c.Grow(W);
+            }
+            return c;
+        }
+
+        public IEnumerable<Cell> Traverse(Direction dir)
+        {
+            Cell c = this;
+            while (c != null)
+            {
+                yield return c;
+                c = c.Neighbours.GetValueOrDefault(dir, null);
+            }
         }
 
         public Cell Grow(Rose.Direction dir)

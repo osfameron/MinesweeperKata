@@ -4,6 +4,7 @@ using static Mine2.Rose;
 using static Mine2.Rose.Direction;
 
 using System;
+using System.Linq;
 
 namespace Mine2Tests
 {
@@ -86,6 +87,14 @@ namespace Mine2Tests
             Assert.AreEqual(se, nw[E][E][S][S]);
             Assert.AreEqual(nw, ne[S][NW][W]);
             Assert.AreEqual(nw, se[W][W][N][N]);
+        }
+
+        [Test]
+        public void LatticeTest()
+        {
+            Cell c = Cell.Lattice(3,5);
+            Assert.AreEqual(5, c.Traverse(E).Count());
+            Assert.AreEqual(3, c.Traverse(S).Count());
         }
 
     }
