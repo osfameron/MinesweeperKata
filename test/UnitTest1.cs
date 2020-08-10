@@ -1,7 +1,6 @@
 using NUnit.Framework;
 using Minesweeper;
 using System;
-using Sprache;
 
 namespace MinesweeperTests
 {
