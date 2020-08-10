@@ -11,6 +11,7 @@ namespace Mine2
 
     public static class Extensions
     {
+        // should be a Formatter class rather than static lambdas?
         private static Func<Cell<Piece>, bool> IsMine = p => p.Value == Piece.Mine;
         public static Func<Cell<Piece>, string> PieceOut = p => IsMine(p) ? "*" : ".";
         public static Func<Cell<Piece>, string> CountOut =
@@ -44,7 +45,7 @@ namespace Mine2
             (Direction) Mod((int) r + c, DIR);
 
         public static Direction Opposite(Direction r) =>
-            Rotate(r, 4);
+            Rotate(r, DIR / 2);
 
         public static Direction Mid(Direction dir, Direction perp) =>
             (Direction) (((int) dir + (int) perp) / 2);
@@ -52,7 +53,6 @@ namespace Mine2
 
     public class Cell<T>
     {
-
         public T Value { get; set; }
         public Dictionary<Direction, Cell<T>> Neighbours { get; }
 
@@ -62,7 +62,7 @@ namespace Mine2
             Neighbours = new Dictionary<Direction, Cell<T>> {};
         }
 
-        public Cell<T>? this[Direction dir] => Neighbours[dir];
+        public Cell<T> this[Direction dir] => Neighbours[dir];
 
         public void Connect(Direction dir, Cell<T> other)
         {
@@ -120,8 +120,8 @@ namespace Mine2
             AssertCardinal(dir);
 
             var other = Grow_(dir);
-            Grow(dir, Rotate(dir, 2));
-            Grow(dir, Rotate(dir, -2));
+            Grow_(dir, Rotate(dir, 2));
+            Grow_(dir, Rotate(dir, -2));
 
             return other;
         }
@@ -133,7 +133,7 @@ namespace Mine2
             return other;
         }
 
-        private void Grow(Direction dir, Direction perp)
+        private void Grow_(Direction dir, Direction perp)
         {
             Cell<T> p = Neighbours.GetValueOrDefault(perp, null);
             if (p is null) return;
@@ -145,7 +145,7 @@ namespace Mine2
             p.Connect(Mid(dir, Opposite(perp)), r);
             r.Connect(perp, q);
 
-            p.Grow(dir, perp);
+            p.Grow_(dir, perp);
         }
     }
 }
