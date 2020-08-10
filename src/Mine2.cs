@@ -25,6 +25,9 @@ namespace Mine2
 
         public static Direction Opposite(Direction r) =>
             Rotate(r, 4);
+
+        public static Direction Mid(Direction dir, Direction perp) =>
+            (Direction) (((int) dir + (int) perp) / 2);
     }
 
     public class Cell
@@ -46,9 +49,33 @@ namespace Mine2
         {
             Rose.AssertCardinal(dir);
 
+            Cell other = Grow_(dir);
+            Grow(dir, Rose.Rotate(dir, 2));
+            Grow(dir, Rose.Rotate(dir, -2));
+
+            return other;
+        }
+
+        private Cell Grow_(Rose.Direction dir)
+        {
             Cell other = new Cell();
             Connect(dir, other);
             return other;
+        }
+
+        private void Grow(Rose.Direction dir, Rose.Direction perp)
+        {
+            Cell? p = Neighbours.GetValueOrDefault(perp, null);
+            if (p is null) return;
+
+            Cell q = p.Grow_(dir);
+            Cell r = Neighbours[dir];
+
+            Connect(Rose.Mid(dir, perp), q);
+            p.Connect(Rose.Mid(dir, Rose.Opposite(perp)), r);
+            r.Connect(perp, q);
+
+            p.Grow(dir, perp);
         }
     }
 }

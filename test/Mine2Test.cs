@@ -19,6 +19,9 @@ namespace Mine2Tests
             Assert.AreEqual(N, Rotate(S, 4));
 
             Assert.AreEqual(W, Opposite(E));
+
+            Assert.AreEqual(NE, Mid(N, E));
+            Assert.AreEqual(NE, Mid(E, N));
         }
 
         [Test]
@@ -57,10 +60,18 @@ namespace Mine2Tests
             Assert.AreEqual(c1.Neighbours[E], c2);
             Assert.AreEqual(c2.Neighbours[W], c1);
 
-            Cell c3 = new Cell();
-            Assert.Throws<ArgumentException>(
-                () => { Cell c4 = c3.Grow(NE); }
-            );
+            Cell c3 = c1.Grow(S);
+            Assert.AreEqual(c1.Neighbours[S], c3);
+            Assert.AreEqual(c3.Neighbours[N], c1);  
+            Assert.AreEqual(c1.Neighbours[SE],  c2.Neighbours[S]); 
+            Assert.AreEqual(c2.Neighbours[SW], c3);     
+            Assert.AreEqual(c3.Neighbours[NE], c2);     
+            Assert.AreEqual(c3.Neighbours[E], c2.Neighbours[S]);     
+
+            Assert.Throws<ArgumentException>(() => {
+                    Cell cx = new Cell();
+                    Cell cy = cx.Grow(NE);
+            });
         }
 
     }
