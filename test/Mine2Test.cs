@@ -2,7 +2,7 @@ using NUnit.Framework;
 using Mine2;
 using static Mine2.Rose;
 using static Mine2.Rose.Direction;
-using static Mine2.Extensions;
+using static Mine2.Formatters;
 
 using System;
 using System.Linq;
