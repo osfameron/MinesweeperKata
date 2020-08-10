@@ -9,6 +9,14 @@ namespace Mine2
         public enum Direction { N, NE, E, SE, S, SW, W, NW };
         private const int DIR = 8;
 
+        public static void AssertCardinal(Direction r)
+        {
+            if ((int) r % 2 != 0)
+            {
+                throw new ArgumentException($"Direction {r} is not cardinal");
+            }
+        }
+
         /// <summary> Actual mathematical modulus rather than remainder </summary>
         private static int Mod (int x, int m) => (x % m + m) % m;
 
@@ -32,6 +40,15 @@ namespace Mine2
         {
             Neighbours.Add(dir, other);
             other.Neighbours.Add(Rose.Opposite(dir), this);
+        }
+
+        public Cell Grow(Rose.Direction dir)
+        {
+            Rose.AssertCardinal(dir);
+
+            Cell other = new Cell();
+            Connect(dir, other);
+            return other;
         }
     }
 }

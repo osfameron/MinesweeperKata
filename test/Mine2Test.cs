@@ -22,7 +22,7 @@ namespace Mine2Tests
         }
 
         [Test]
-        public void CellTest()
+        public void CellConnectTest()
         {
             Cell c1 = new Cell();
             Assert.AreEqual(0, c1.Neighbours.Count);
@@ -47,7 +47,20 @@ namespace Mine2Tests
                     Cell c3 = new Cell();
                     c3.Connect(W, c1);
                 });
+        }
 
+        [Test]
+        public void CellGrowTest()
+        {
+            Cell c1 = new Cell();
+            Cell c2 = c1.Grow(E);
+            Assert.AreEqual(c1.Neighbours[E], c2);
+            Assert.AreEqual(c2.Neighbours[W], c1);
+
+            Cell c3 = new Cell();
+            Assert.Throws<ArgumentException>(
+                () => { Cell c4 = c3.Grow(NE); }
+            );
         }
 
     }
