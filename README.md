@@ -140,6 +140,19 @@ each row in turn, which I've encapsulated in a Higher Order Function called `Zip
 (This is the reason I ended up having to figure out Just Enough Generics to handle 3 type
 variables and a function delegate...)
 
+# Alternative implementation
+
+As well as this very FP implementation, I tried an OO version in `Mine2.cs`, with a lattice
+of cells which automatically add links to their neighbours as the grid grows.
+
+This kind of heavily linked structure is very over-the-top, but really fun to work with.
+I like the fact that you don't have to do calculations with e.g. `{y-1, x-1}, {y, x-1}, ...`
+which often end up with messy loops. Instead, you just iterate the `Neighbours` dictionary
+with an Enum of all the directions of the compass.
+
+There's also no distinction between a Cell and a Grid. That is to say, creating a new
+`Lattice` just returns a reference to the cell at the NW corner.
+
 # What's next?
 
 * Missing parts of Kata spec
